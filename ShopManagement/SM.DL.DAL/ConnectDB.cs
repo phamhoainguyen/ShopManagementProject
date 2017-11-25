@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using System.Collections.Generic;
 
 namespace SM.DAL
 {
-    class ConnectDB
+    public class ConnectDB
     {
-        public string connectionString;
+        private string connectionString;
         private SqlConnection conn;
 
         public ConnectDB() { }
@@ -50,24 +47,81 @@ namespace SM.DAL
         {
             return this.conn;
         }
-        public DataTable GetDataTable(string storeProcedureName, string[] arrParam = null, SqlDbType[] arrType = null, ParameterDirection[] direct = null)
+
+
+
+        //"INSERT INTO Mem_Basic(Mem_Na,Mem_Occ)  VALUES(@na,@occ);SELECT SCOPE_IDENTITY();"
+        //"INSERT INTO Mem_Basic(Mem_Na,Mem_Occ) output INSERTED.ID VALUES(@na,@occ)"
+
+
+
+            /// <summary>
+            /// DUNG CHO CAC CAU SELECT
+            /// </summary>
+            /// <param name="stringQuery"></param>
+            /// <param name="paras"> cac cot can su dung</param>
+            /// <param name="values"> gia tri can truyen vao</param>
+            /// <param name="arrTypes">cac kieu du lieu tuong ung</param>
+            /// <returns></returns>
+        public DataTable GetDataTable(string stringQuery, string[] paras, object[] values, SqlDbType[] arrTypes)
         {
             try
             {
-                
-                SqlCommand cmd = new SqlCommand(storeProcedureName, conn);
+                // open Connection
+                conn.Open();
 
-                cmd.CommandType = CommandType.StoredProcedure;
+                //tao cmd tu stringQuery va conn
+                //cmd = new SqlCommand(stringQuery, conn);
 
-                for (int i = 0; i < arrParam.Length; i++)
+                // tao sqlCommand tu connection
+                SqlCommand cmd = this.conn.CreateCommand();
+                //gan chuoi stringQuery cho cmd
+                cmd.CommandText = stringQuery;
+
+
+                for (int i = 0; i < paras.Length; i++)
                 {
-                    cmd.Parameters.Add(new SqlParameter(arrParam[i].ToString(), arrType[i]));
+                    // Truyen tham so kieu 1
+                    //SqlParameter parameter = new SqlParameter("@namePara", SqlDbType.Decimal);
+                    //parameter.Value = 3;
+                    //cmd.Parameters.Add(parameter);
+
+                    //Truyen tham so kieu 2
+
+                    //kieu date mac dinh la YYYY/MM/DD
+                    if(arrTypes[i] == SqlDbType.Date)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Float).Value = (string)values[i];
+                    }
+                    else if(arrTypes[i] == SqlDbType.Float)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Float).Value = (float)values[i];
+                    }
+                    else if((SqlDbType)arrTypes[i] == SqlDbType.Int || (SqlDbType)arrTypes[i] == SqlDbType.Decimal)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Int).Value = (decimal)(values[i]);
+                    }
+                    else if((SqlDbType)arrTypes[i] == SqlDbType.Money)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Money).Value = (decimal)values[i];
+                    }
+                    else    // anything else is NVarchar
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.NVarChar).Value = (string)values[i];
+                    }
                     
                 }
 
-                cmd.Connection = conn;
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                // Thuc hien truy van
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return this.ConvertDataReaderToDataTabele(reader);
+                    }
+                }
+
+                return null;
             }
             catch (Exception e)
             {
@@ -75,19 +129,219 @@ namespace SM.DAL
             }
             finally
             {
-                conn.Close();
-                conn.Dispose();
-                conn = null;
+                if(this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    conn.Dispose();
+                    conn = null;
+                }
             }
-            
-            
-
-            
-            return null;
         }
 
 
+        /// <summary>
+        /// DUNG CHO CAC CAU INSERT, UPDATE tra ve ID vua insert hoac update
+        /// </summary>
+        /// <returns></returns>
+        public int ExecuteQueryReturnID(string stringQuery, string[] paras, object[] values, SqlDbType[] arrTypes)
+        {
+            try
+            {
+                // open Connection
+                conn.Open();
 
+                //tao cmd tu stringQuery va conn
+                //cmd = new SqlCommand(stringQuery, conn);
+
+                // tao sqlCommand tu connection
+                SqlCommand cmd = this.conn.CreateCommand();
+                //gan chuoi stringQuery cho cmd
+                cmd.CommandText = stringQuery;
+
+
+                for (int i = 0; i < paras.Length; i++)
+                {
+                    // Truyen tham so kieu 1
+                    //SqlParameter parameter = new SqlParameter("@namePara", SqlDbType.Decimal);
+                    //parameter.Value = 3;
+                    //cmd.Parameters.Add(parameter);
+
+                    //Truyen tham so kieu 2
+
+                    //kieu date mac dinh la YYYY/MM/DD
+                    if (arrTypes[i] == SqlDbType.Date)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Float).Value = (string)values[i];
+                    }
+                    else if (arrTypes[i] == SqlDbType.Float)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Float).Value = (float)values[i];
+                    }
+                    else if ((SqlDbType)arrTypes[i] == SqlDbType.Int || (SqlDbType)arrTypes[i] == SqlDbType.Decimal)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Int).Value = (decimal)(values[i]);
+                    }
+                    else if ((SqlDbType)arrTypes[i] == SqlDbType.Money)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Money).Value = (decimal)values[i];
+                    }
+                    else    // anything else is NVarchar
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.NVarChar).Value = (string)values[i];
+                    }
+
+                }
+
+                int modified = (int)cmd.ExecuteScalar();
+                if(modified != 0)
+                {
+                    return modified;
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    conn.Dispose();
+                    conn = null;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Dung cho cac cau INSERT, UPDATE, DELETE nhung tra ve so dong bi thay doi
+        /// </summary>
+        /// <param name="stringQuery"></param>
+        /// <param name="paras"></param>
+        /// <param name="values"></param>
+        /// <param name="arrTypes"></param>
+        /// <returns></returns>
+        public int ExecuteQueryReturnNumberRowsEffected(string stringQuery, string[] paras, object[] values, SqlDbType[] arrTypes)
+        {
+            try
+            {
+                // open Connection
+                conn.Open();
+
+                //tao cmd tu stringQuery va conn
+                //cmd = new SqlCommand(stringQuery, conn);
+
+                // tao sqlCommand tu connection
+                SqlCommand cmd = this.conn.CreateCommand();
+                //gan chuoi stringQuery cho cmd
+                cmd.CommandText = stringQuery;
+
+
+                for (int i = 0; i < paras.Length; i++)
+                {
+                    // Truyen tham so kieu 1
+                    //SqlParameter parameter = new SqlParameter("@namePara", SqlDbType.Decimal);
+                    //parameter.Value = 3;
+                    //cmd.Parameters.Add(parameter);
+
+                    //Truyen tham so kieu 2
+
+                    //kieu date mac dinh la YYYY/MM/DD
+                    if (arrTypes[i] == SqlDbType.Date)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Float).Value = (string)values[i];
+                    }
+                    else if (arrTypes[i] == SqlDbType.Float)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Float).Value = (float)values[i];
+                    }
+                    else if ((SqlDbType)arrTypes[i] == SqlDbType.Int || (SqlDbType)arrTypes[i] == SqlDbType.Decimal)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Int).Value = (decimal)(values[i]);
+                    }
+                    else if ((SqlDbType)arrTypes[i] == SqlDbType.Money)
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.Money).Value = (decimal)values[i];
+                    }
+                    else    // anything else is NVarchar
+                    {
+                        cmd.Parameters.Add(paras[i], SqlDbType.NVarChar).Value = (string)values[i];
+                    }
+
+                }
+
+                int modified = (int)cmd.ExecuteNonQuery();
+                if (modified != 0)
+                {
+                    return modified;
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    conn.Dispose();
+                    conn = null;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Chuyen doi tu DataReader sang DataTable
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <returns></returns>
+        private DataTable ConvertDataReaderToDataTabele(SqlDataReader dr)
+        {
+            try
+            {
+                DataTable dtSchema = dr.GetSchemaTable();
+                DataTable dt = new DataTable();
+                // You can also use an ArrayList instead of List<> 
+                List<DataColumn> listCols = new List<DataColumn>();
+                if (dtSchema != null)
+                {
+                    foreach (DataRow drow in dtSchema.Rows)
+                    {
+                        string columnName = System.Convert.ToString(drow["ColumnName"]);
+                        DataColumn column = new DataColumn(columnName, (Type)(drow["DataType"]));
+                        column.Unique = (bool)drow["IsUnique"];
+                        column.AllowDBNull = (bool)drow["AllowDBNull"];
+                        column.AutoIncrement = (bool)drow["IsAutoIncrement"];
+                        listCols.Add(column);
+                        dt.Columns.Add(column);
+                    }
+                }
+
+                // Read rows from DataReader and populate the DataTable 
+                while (dr.Read())
+                {
+                    DataRow dataRow = dt.NewRow();
+                    for (int i = 0; i < listCols.Count; i++)
+                    {
+                        dataRow[((DataColumn)listCols[i])] = dr[i];
+                    }
+
+                    dt.Rows.Add(dataRow);
+                }
+
+                return dt;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
+        }
 
 
 
