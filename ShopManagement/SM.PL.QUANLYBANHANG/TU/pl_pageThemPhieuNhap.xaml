@@ -1,0 +1,75 @@
+﻿<Page x:Class="SM.PL.QUANLYBANHANG.TU.pl_pageThemPhieuNhap"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SM.PL.QUANLYBANHANG.TU"
+      mc:Ignorable="d" 
+      d:DesignHeight="720" d:DesignWidth="1050"
+      Title="pl_pageThemPhieuNhap">
+
+    <Grid
+        Background="White"
+        >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel
+            Grid.Column="0"
+            Grid.Row="0"
+            Orientation="Horizontal"
+            >
+            <Label Content="Nhập hàng"></Label>
+            <TextBox Width="70" x:Name="txtTimKiem"></TextBox>
+            <Button Width="30" Content="+" x:Name="btnThemHangHoa"></Button>
+        </StackPanel>
+        <Grid
+            Grid.Column="0"
+            Grid.Row="1"
+           
+            >
+
+        </Grid>
+        <Grid
+            Grid.Column="1"
+            Grid.Row="1"
+            Margin="10,0,0,0"
+            >
+            <Grid.ColumnDefinitions
+                >
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Content="Nhân viên"></Label>
+            <ComboBox Width="80" x:Name="cbNvNhap" Grid.Column="1" Grid.Row="0"></ComboBox>
+            <Label Content="Thời gian" Grid.Column="0" Grid.Row="1"></Label>
+            <Label x:Name="lbThoiGian" Content="18/04/1996 10:56" Grid.Column="1" Grid.Row="1"></Label>
+            <Label Content="Nhà cung cấp" Grid.Column="0" Grid.Row="2"></Label>
+            <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                <TextBox x:Name="txtNCC" Width="50"  ></TextBox>
+                <Button Content="+" x:Name="btnThemNCC"  ></Button>
+            </StackPanel>
+            <Label Content="Mã phiếu nhập" Grid.Column="0" Grid.Row="3"></Label>
+          
+
+
+
+
+
+
+        </Grid>
+    </Grid>
+</Page>
