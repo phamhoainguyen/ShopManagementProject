@@ -63,6 +63,7 @@
                 <Button Content="+" x:Name="btnThemNCC"  ></Button>
             </StackPanel>
             <Label Content="Mã phiếu nhập" Grid.Column="0" Grid.Row="3"></Label>
+            <TextBox x:Name="txtMaPhieuNhap" Grid.Column="1" Grid.Row="3"></TextBox>
           
 
 
