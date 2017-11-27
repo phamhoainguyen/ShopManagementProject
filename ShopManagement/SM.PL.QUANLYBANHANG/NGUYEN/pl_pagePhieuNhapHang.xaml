@@ -35,10 +35,12 @@
             <Button Content="Tim" Width="70" VerticalAlignment="Center" Margin="30,0,0,0"></Button>
         </StackPanel>
         <Grid Grid.Row="2">
-            <dxg:GridControl x:Name="iGridView">
+            <dxg:GridControl x:Name="iGridViewPhieuNhap">
                 <dxg:GridControl.Columns>
-                    <dxg:GridColumn Header="id" Binding="{Binding id, Mode=TwoWay}" />
-                    <dxg:GridColumn Header="name" Binding="{Binding name, Mode=TwoWay}"/>
+                    <dxg:GridColumn Header="Ma phieu nhap" Binding="{Binding MAPHIEUNHAP, Mode=TwoWay}" />
+                    <dxg:GridColumn Header="Nha cung cap" Binding="{Binding TENNHACUNGCAP, Mode=TwoWay}"/>
+                    <dxg:GridColumn Header="Tong tien" Binding="{Binding TONGTIENCANTRA, Mode=TwoWay}"/>
+                    <dxg:GridColumn Header="Thoi gian" Binding="{Binding THOIGIAN, Mode=TwoWay}"/>
                 </dxg:GridControl.Columns>
                 <dxg:GridControl.View>
                     <dxg:TableView ShowGroupPanel="False"/>
