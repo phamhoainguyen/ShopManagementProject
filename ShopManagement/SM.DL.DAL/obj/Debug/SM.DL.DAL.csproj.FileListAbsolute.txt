@@ -1,0 +1,7 @@
+E:\Learning\Subjects\PTPMHDT\Project\ShopManagementProject\trunk\ShopManagement\SM.DL.DAL\obj\Debug\SM.DL.DAL.csprojResolveAssemblyReference.cache
+E:\Learning\Subjects\PTPMHDT\Project\ShopManagementProject\trunk\ShopManagement\SM.DL.DAL\obj\Debug\SM.DL.DAL.csproj.CoreCompileInputs.cache
+E:\Learning\Subjects\PTPMHDT\Project\ShopManagementProject\trunk\ShopManagement\SM.DL.DAL\bin\Debug\SM.DL.DAL.pdb
+E:\Learning\Subjects\PTPMHDT\Project\ShopManagementProject\trunk\ShopManagement\SM.DL.DAL\obj\Debug\SM.DL.DAL.pdb
+E:\Learning\Subjects\PTPMHDT\Project\ShopManagementProject\trunk\ShopManagement\SM.DL.DAL\bin\Debug\SM.DL.DAL.dll.config
+E:\Learning\Subjects\PTPMHDT\Project\ShopManagementProject\trunk\ShopManagement\SM.DL.DAL\bin\Debug\SM.DL.DAL.dll
+E:\Learning\Subjects\PTPMHDT\Project\ShopManagementProject\trunk\ShopManagement\SM.DL.DAL\obj\Debug\SM.DL.DAL.dll

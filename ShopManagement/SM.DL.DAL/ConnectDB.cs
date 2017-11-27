@@ -68,7 +68,7 @@ namespace SM.DAL
             try
             {
                 // open Connection
-                conn.Open();
+                this.OpenConnection();
 
                 //tao cmd tu stringQuery va conn
                 //cmd = new SqlCommand(stringQuery, conn);
@@ -113,15 +113,11 @@ namespace SM.DAL
                 }
 
                 // Thuc hien truy van
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return this.ConvertDataReaderToDataTabele(reader);
-                    }
-                }
+                var reader = cmd.ExecuteReader();
+                var dt = new DataTable();
+                dt.Load(reader);
 
-                return null;
+                return dt;
             }
             catch (Exception e)
             {
@@ -131,7 +127,44 @@ namespace SM.DAL
             {
                 if(this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
                 {
-                    conn.Close();
+                    this.CloseConnection();
+                    conn.Dispose();
+                    conn = null;
+                }
+            }
+        }
+
+        public DataTable GetDataTable(string stringQuery)
+        {
+            try
+            {
+                // open Connection
+                this.OpenConnection();
+
+                //tao cmd tu stringQuery va conn
+                //cmd = new SqlCommand(stringQuery, conn);
+
+                // tao sqlCommand tu connection
+                SqlCommand cmd = this.conn.CreateCommand();
+                //gan chuoi stringQuery cho cmd
+                cmd.CommandText = stringQuery;
+
+                // Thuc hien truy van
+                var reader = cmd.ExecuteReader();
+                var dt = new DataTable();
+                dt.Load(reader);
+
+                return dt;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
+                {
+                    this.CloseConnection();
                     conn.Dispose();
                     conn = null;
                 }
@@ -148,7 +181,7 @@ namespace SM.DAL
             try
             {
                 // open Connection
-                conn.Open();
+                this.OpenConnection();
 
                 //tao cmd tu stringQuery va conn
                 //cmd = new SqlCommand(stringQuery, conn);
@@ -179,7 +212,7 @@ namespace SM.DAL
                     }
                     else if ((SqlDbType)arrTypes[i] == SqlDbType.Int || (SqlDbType)arrTypes[i] == SqlDbType.Decimal)
                     {
-                        cmd.Parameters.Add(paras[i], SqlDbType.Int).Value = (decimal)(values[i]);
+                        cmd.Parameters.Add(paras[i], SqlDbType.Int).Value = (int)(values[i]);
                     }
                     else if ((SqlDbType)arrTypes[i] == SqlDbType.Money)
                     {
@@ -207,7 +240,7 @@ namespace SM.DAL
             {
                 if (this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
                 {
-                    conn.Close();
+                    this.CloseConnection();
                     conn.Dispose();
                     conn = null;
                 }
@@ -228,7 +261,7 @@ namespace SM.DAL
             try
             {
                 // open Connection
-                conn.Open();
+                this.OpenConnection();
 
                 //tao cmd tu stringQuery va conn
                 //cmd = new SqlCommand(stringQuery, conn);
@@ -287,7 +320,7 @@ namespace SM.DAL
             {
                 if (this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
                 {
-                    conn.Close();
+                    this.CloseConnection();
                     conn.Dispose();
                     conn = null;
                 }
@@ -343,7 +376,42 @@ namespace SM.DAL
             
         }
 
+        public DataTable ExecuteQueryGetLastestID(string stringQuery)
+        {
+            try
+            {
+                // open Connection
+                this.OpenConnection();
 
+                //tao cmd tu stringQuery va conn
+                //cmd = new SqlCommand(stringQuery, conn);
+
+                // tao sqlCommand tu connection
+                SqlCommand cmd = this.conn.CreateCommand();
+                //gan chuoi stringQuery cho cmd
+                cmd.CommandText = stringQuery;
+
+                // Thuc hien truy van
+                var reader = cmd.ExecuteReader();
+                var dt = new DataTable();
+                dt.Load(reader);
+
+                return dt;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (this.conn != null && this.conn.State == System.Data.ConnectionState.Open)
+                {
+                    this.CloseConnection();
+                    conn.Dispose();
+                    conn = null;
+                }
+            }
+        }
 
     }
 }

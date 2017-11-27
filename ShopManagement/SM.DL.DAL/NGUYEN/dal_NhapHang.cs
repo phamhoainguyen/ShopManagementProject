@@ -10,13 +10,13 @@ namespace SM.DL.DAL.DataQueries
 {
     class dal_NhapHang
     {
-        private ConnectionString connectionString;
+        //private ConnectionString connectionString;
 
-        public int InsertHangHoa( DataTable iDataSourceHangHoa)
-        {
-            String query = "";
+        //public int InsertHangHoa( DataTable iDataSourceHangHoa)
+        //{
+        //    String query = "";
 
-            return 0;
-        }
+        //    return 0;
+        //}
     }
 }
