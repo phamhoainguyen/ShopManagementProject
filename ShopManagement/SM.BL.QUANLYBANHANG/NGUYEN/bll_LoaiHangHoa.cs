@@ -22,8 +22,21 @@ namespace SM.BL.QUANLYBANHANG
             catch(Exception ex)
             {
                 throw ex;
+            }         
+        }
+
+        public int GetLastesIDLoaiHH()
+        {
+            try
+            {
+                dal_LoaiHangHoa dal = new dal_LoaiHangHoa();
+                int value = dal.GetLastestIDLoaiHH();
+                return value;
             }
-            
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
     
